@@ -1,5 +1,34 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { DollarSign, TrendingUp, Users } from 'lucide-react';
+
+// Internal component for smooth value transitions
+const AnimatedValue = ({ value, format }: { value: number, format: (v: number) => string }) => {
+  const [displayValue, setDisplayValue] = useState(value);
+  
+  useEffect(() => {
+    let startTimestamp: number | null = null;
+    const duration = 500; // ms
+    const startValue = displayValue;
+    const change = value - startValue;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      // Ease out cubic
+      const ease = 1 - Math.pow(1 - progress, 3);
+      
+      setDisplayValue(startValue + (change * ease));
+      
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    
+    window.requestAnimationFrame(step);
+  }, [value]);
+
+  return <>{format(displayValue)}</>;
+};
 
 const UnitEconomics: React.FC = () => {
   const [courts, setCourts] = useState(12);
@@ -47,6 +76,9 @@ const UnitEconomics: React.FC = () => {
       notation: val > 1000000 ? 'compact' : 'standard'
     }).format(val);
   };
+
+  const formatNumber = (val: number) => Math.round(val).toLocaleString();
+  const formatDecimal = (val: number) => val.toFixed(1);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-12 bg-carbon/50 border border-white/10 p-8 rounded-xl backdrop-blur-sm">
@@ -110,7 +142,7 @@ const UnitEconomics: React.FC = () => {
             </div>
             <p className="text-xs font-mono text-neon-blue uppercase tracking-widest mb-1">Total Annual Revenue</p>
             <div className="text-4xl md:text-5xl font-black text-white tracking-tighter">
-              {formatCurrency(stats.totalRevenue)}
+              <AnimatedValue value={stats.totalRevenue} format={formatCurrency} />
             </div>
           </div>
 
@@ -119,7 +151,7 @@ const UnitEconomics: React.FC = () => {
             <div className="absolute inset-x-0 bottom-0 h-1 bg-neon-lime scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
             <p className="text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">EBITDA ({stats.margin}%)</p>
             <div className="text-2xl md:text-3xl font-bold text-white tracking-tighter text-glow-lime">
-              {formatCurrency(stats.ebitda)}
+               <AnimatedValue value={stats.ebitda} format={formatCurrency} />
             </div>
           </div>
 
@@ -128,7 +160,7 @@ const UnitEconomics: React.FC = () => {
             <div className="absolute inset-x-0 bottom-0 h-1 bg-neon-blue scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
             <p className="text-xs font-mono text-gray-400 uppercase tracking-widest mb-1">Est. Payback Period</p>
             <div className="text-2xl md:text-3xl font-bold text-white tracking-tighter">
-              {stats.paybackMonths.toFixed(1)} <span className="text-base font-normal text-gray-400">Months</span>
+              <AnimatedValue value={stats.paybackMonths} format={formatDecimal} /> <span className="text-base font-normal text-gray-400">Months</span>
             </div>
           </div>
 
@@ -138,7 +170,9 @@ const UnitEconomics: React.FC = () => {
               <Users className="text-gray-400 w-5 h-5" />
               <span className="text-sm text-gray-300">Annual Visitor Traffic</span>
             </div>
-            <span className="font-mono text-neon-lime font-bold">{Math.round(stats.visitorsPerYear).toLocaleString()}</span>
+            <span className="font-mono text-neon-lime font-bold">
+               <AnimatedValue value={stats.visitorsPerYear} format={formatNumber} />
+            </span>
           </div>
 
         </div>
