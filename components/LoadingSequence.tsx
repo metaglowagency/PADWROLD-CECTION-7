@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { INITIAL_LOGS } from '../constants';
+import { Logo } from './Logo';
 
 interface LoadingSequenceProps {
   onComplete: () => void;
@@ -52,7 +53,10 @@ const LoadingSequence: React.FC<LoadingSequenceProps> = ({ onComplete }) => {
       
       <div className="w-full max-w-2xl">
         <div className="mb-8 border-b border-white/20 pb-4 flex justify-between items-end">
-          <h2 className="text-neon-lime text-sm tracking-widest uppercase">System Boot</h2>
+          <div className="flex items-center gap-3">
+             <Logo className="h-4 w-auto text-neon-lime" />
+             <span className="text-neon-lime text-sm tracking-widest uppercase">System Boot</span>
+          </div>
           <span className="text-neon-blue text-xs">{progress}%</span>
         </div>
 
@@ -66,7 +70,7 @@ const LoadingSequence: React.FC<LoadingSequenceProps> = ({ onComplete }) => {
           {progress === 100 && (
              <div className="text-neon-blue text-sm tracking-wide mt-4 font-bold">
               <span className="text-neon-blue mr-2">{'>'}</span>
-              PADWORLD FINANCIAL ENGINE — ONLINE
+              FINANCIAL ENGINE — ONLINE
             </div>
           )}
         </div>

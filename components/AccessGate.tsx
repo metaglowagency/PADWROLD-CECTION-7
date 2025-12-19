@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ACCESS_KEY } from '../constants';
 import { Lock, ChevronRight } from 'lucide-react';
+import { Logo } from './Logo';
 
 interface AccessGateProps {
   onUnlock: () => void;
@@ -30,9 +31,11 @@ const AccessGate: React.FC<AccessGateProps> = ({ onUnlock }) => {
           <div className="flex justify-center mb-6">
             <Lock className={`w-8 h-8 ${error ? 'text-red-500' : 'text-neon-lime'} transition-colors duration-300`} />
           </div>
-          <h1 className="text-4xl font-black tracking-tighter text-white mb-2 uppercase">
-            PadWorld Investor System
-          </h1>
+          
+          <div className="flex justify-center mb-4">
+             <Logo className="text-white w-64 h-auto" />
+          </div>
+          
           <p className="text-xs font-mono tracking-widest text-neon-blue uppercase">
             Module: Financial Intelligence
           </p>

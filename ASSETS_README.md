@@ -1,34 +1,30 @@
 # PadWorld Media Assets Guide
 
-This project uses a centralized routing file for all images and video backgrounds to ensure ease of updates and maintenance.
+This project uses a centralized routing file (`assets.ts`) to manage all high-impact visuals, parallax backgrounds, and brand messaging.
 
-## How to Update Images
+## How to Update Media
 
-1. **Prepare your files**: Ensure images are optimized for web (JPEG/WebP, <500KB ideally).
-2. **Upload**: 
-   - If hosting locally, place images in a `public/images/` folder.
-   - If hosting on cloud (AWS S3, Cloudinary), get the public URL.
-3. **Update Registry**:
-   - Open `assets.ts` in the root directory.
-   - Replace the URL string for the corresponding key.
+1. **Prepare Assets**: Use high-resolution images (1920px+ width) and optimized videos (<5MB).
+2. **Registry Mapping**:
+   - Open `assets.ts`.
+   - Update the `url`, `video`, or `poster` properties.
+   - Modify `slogan` and `title` to change the on-screen brand messaging.
 
-## Routing Structure (`assets.ts`)
+## Registry Structure (`assets.ts`)
 
-```typescript
-export const ASSETS = {
-  hero: {
-    video: "URL_TO_HERO_VIDEO.mp4",
-    poster: "URL_TO_FALLBACK_IMAGE.jpg"
-  },
-  dividers: {
-    ecosystem: { url: "..." },
-    economics: { url: "..." },
-    roi: { url: "..." }
-  }
-}
-```
+### Hero Section
+- `hero.video`: The main background loop.
+- `hero.poster`: The fallback image used for slow connections or as a static background.
+- `hero.slogan`: The primary sub-heading in the hero section.
+
+### Section Dividers
+Each divider corresponds to a transition between major financial modules:
+- `ecosystem`: Hero → Revenue Stack
+- `economics`: Revenue Stack → Unit Economics
+- `roi`: Unit Economics → Investor Scenarios
 
 ## Recommended Specs
 
-- **Hero Video**: 1080p, MP4 format, muted, <5MB size. Dark overlay is applied automatically by code.
-- **Divider Images**: 1920x600px resolution, dark/moody aesthetic preferred to match the Carbon UI theme.
+- **Parallax Images**: 2560x1440px, moody/abstract aesthetic.
+- **Videos**: 1080p MP4, muted, H.264.
+- **Local Files**: If using local files, place them in `/public/images/` and use paths like `/images/your-file.jpg`.

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { AppState } from './types';
-import AccessGate from './components/AccessGate';
-import LoadingSequence from './components/LoadingSequence';
+import { AuthScreen } from './components/AuthScreen';
+import BootSequence from './components/BootSequence';
 import Dashboard from './components/Dashboard';
+import { AnimatePresence } from 'framer-motion';
 
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.LOCKED);
@@ -17,17 +18,19 @@ const App: React.FC = () => {
 
   return (
     <main className="w-full h-full">
-      {appState === AppState.LOCKED && (
-        <AccessGate onUnlock={handleUnlock} />
-      )}
-      
-      {appState === AppState.LOADING && (
-        <LoadingSequence onComplete={handleLoadingComplete} />
-      )}
-      
-      {appState === AppState.ACTIVE && (
-        <Dashboard />
-      )}
+      <AnimatePresence mode="wait">
+        {appState === AppState.LOCKED && (
+          <AuthScreen onAuthenticated={handleUnlock} key="auth" />
+        )}
+        
+        {appState === AppState.LOADING && (
+          <BootSequence onComplete={handleLoadingComplete} key="boot" />
+        )}
+        
+        {appState === AppState.ACTIVE && (
+          <Dashboard key="dashboard" />
+        )}
+      </AnimatePresence>
     </main>
   );
 };
